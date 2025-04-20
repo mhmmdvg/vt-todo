@@ -31,12 +31,12 @@ function openAddDrawer() {
 
 <template>
   <header>
-    <nav class="fixed w-full border-b px-6 py-4">
+    <nav class="fixed w-full border-b px-4 sm:px-6 py-4 bg-white z-10">
       <h1 class="text-xl font-semibold">To Do Apps</h1>
     </nav>
   </header>
 
-  <main class="h-screen w-screen py-20 px-52 space-y-6 bg-white">
+  <main class="min-h-screen w-full pt-20 pb-20 sm:pb-12 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-24 space-y-4 sm:space-y-6 bg-white">
     <BoxInformation :tasks="taskStore.taskStats" />
 
     <!-- Toolbar -->
@@ -52,11 +52,12 @@ function openAddDrawer() {
         <span
           class="absolute start-0 inset-y-0 flex items-center justify-center px-2"
         >
-          <Search class="size-6 text-muted-foreground" />
+          <Search class="size-5 text-muted-foreground" />
         </span>
       </div>
 
-      <div class="flex items-center">
+      <!-- Desktop Add Button - Hidden on mobile -->
+      <div class="hidden sm:flex items-center">
         <Drawer v-model:open="isDrawerOpen">
           <Button
             variant="default"
@@ -72,7 +73,7 @@ function openAddDrawer() {
       </div>
     </div>
 
-    <div class="flex items-center space-x-2 w-full">
+    <div class="flex flex-wrap items-center gap-2 w-full">
       <Button
         v-for="filter in FILTERS"
         :key="filter"
@@ -90,18 +91,18 @@ function openAddDrawer() {
       <div
         v-for="item in taskStore.filteredTasks"
         :key="item.id"
-        class="flex border rounded-lg p-4 justify-between w-full items-center"
+        class="flex flex-col sm:flex-row border rounded-lg p-3 sm:p-4 justify-between w-full items-start sm:items-center gap-4"
         :class="{ 'bg-gray-50': item.completed }"
       >
-        <div class="flex-col flex h-full space-y-5">
-          <h3 class="font-semibold text-xl" :class="{ 'line-through text-gray-500': item.completed }">{{ item.title }}</h3>
-          <p :class="{ 'text-gray-500': item.completed }">{{ item.description }}</p>
+        <div class="flex-col flex h-full space-y-2 sm:space-y-3 w-full sm:w-auto">
+          <h3 class="font-semibold text-lg sm:text-xl" :class="{ 'line-through text-gray-500': item.completed }">{{ item.title }}</h3>
+          <p class="text-sm sm:text-base" :class="{ 'text-gray-500': item.completed }">{{ item.description }}</p>
         </div>
-        <div class="space-x-3">
+        <div class="flex space-x-2 sm:space-x-3 self-end sm:self-auto">
           <Button
             variant="destructive"
             size="icon"
-            class="rounded-md cursor-pointer"
+            class="rounded-md cursor-pointer w-8 h-8 sm:w-10 sm:h-10"
             @click="taskStore.deleteTask(item.id)"
           >
             <Trash class="size-4" />
@@ -110,7 +111,7 @@ function openAddDrawer() {
           <Button
             variant="outline"
             size="icon"
-            class="rounded-md cursor-pointer"
+            class="rounded-md cursor-pointer w-8 h-8 sm:w-10 sm:h-10"
             @click="openEditDrawer(item.id)"
           >
             <Pencil class="size-4" />
@@ -119,7 +120,7 @@ function openAddDrawer() {
             v-if="!item.completed"
             variant="outline"
             size="icon"
-            class="rounded-md cursor-pointer"
+            class="rounded-md cursor-pointer w-8 h-8 sm:w-10 sm:h-10"
             @click="taskStore.toggleTaskCompletion(item.id)"
           >
             <Check class="size-4 text-green-500" />
@@ -128,4 +129,14 @@ function openAddDrawer() {
       </div>
     </div>
   </main>
+
+  <!-- Floating Add Button -->
+    <Button
+      variant="default"
+      class="sm:hidden fixed bottom-6 right-6 rounded-full w-14 h-14 shadow-lg cursor-pointer z-20"
+      @click="openAddDrawer"
+    >
+      <Plus class="size-6" />
+    </Button>
+  
 </template>
